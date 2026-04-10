@@ -1,26 +1,19 @@
 graph TD
-    Start([Start]) --> Init[Load num1 into AX]
+    Start([Start]) --> InitMax[Load num1 into AX]
+    InitMax --> CompMax1{Compare AX, num2}
+    CompMax1 -- "AX > num2 (JG)" --> CompMax2{Compare AX, num3}
+    CompMax1 -- "AX <= num2 (JLE)" --> LoadMax2[Load num2 into AX]
+    LoadMax2 --> CompMax2
+    CompMax2 -- "AX > num3 (JG)" --> StoreMax[Store AX in max_num]
+    CompMax2 -- "AX <= num3 (JLE)" --> LoadMax3[Load num3 into AX]
+    LoadMax3 --> StoreMax
     
-    subgraph Max Logic
-    Init --> Comp1{Compare AX, num2}
-    Comp1 -- "JG (AX > num2)" --> Comp2{Compare AX, num3}
-    Comp1 -- "JLE (AX <= num2)" --> Load2[Load num2 into AX]
-    Load2 --> Comp2
-    Comp2 -- "JG (AX > num3)" --> StoreMax[Store AX in max_num]
-    Comp2 -- "JLE (AX <= num3)" --> Load3[Load num3 into AX]
-    Load3 --> StoreMax
-    end
-
-    StoreMax --> Reset[Load num1 into AX]
-
-    subgraph Min Logic
-    Reset --> Comp3{Compare AX, num2}
-    Comp3 -- "JL (AX < num2)" --> Comp4{Compare AX, num3}
-    Comp3 -- "JGE (AX >= num2)" --> Load5[Load num2 into AX]
-    Load5 --> Comp4
-    Comp4 -- "JL (AX < num3)" --> StoreMin[Store AX in min_num]
-    Comp4 -- "JGE (AX >= num3)" --> Load6[Load num3 into AX]
-    Load6 --> StoreMin
-    end
-
+    StoreMax --> InitMin[Load num1 into AX]
+    InitMin --> CompMin1{Compare AX, num2}
+    CompMin1 -- "AX < num2 (JL)" --> CompMin2{Compare AX, num3}
+    CompMin1 -- "AX >= num2 (JGE)" --> LoadMin2[Load num2 into AX]
+    LoadMin2 --> CompMin2
+    CompMin2 -- "AX < num3 (JL)" --> StoreMin[Store AX in min_num]
+    CompMin2 -- "AX >= num3 (JGE)" --> LoadMin3[Load num3 into AX]
+    LoadMin3 --> StoreMin
     StoreMin --> End([End])
